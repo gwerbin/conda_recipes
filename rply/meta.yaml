@@ -1,0 +1,64 @@
+{% set name = "rply" %}
+{% set version = "0.7.5" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "50c2bf9fe02514bce46de4373bbdb398d7b812061d239306f9baff9210126453" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - appdirs
+  run:
+    - python
+    - appdirs
+
+test:
+  imports:
+    - rply
+
+about:
+  home: The package home page
+  license: BSD 3-clause
+  license_family: BSD
+  license_file: ''
+  summary: A pure Python Lex/Yacc that works with RPython
+  description: "RPLY\n====\n\n.. image:: https://secure.travis-ci.org/alex/rply.png\n    :target: https://travis-ci.org/alex/rply\n\nWelcome to RPLY! A pure Python parser generator, that also works with\
+    \ RPython.\nIt is a more-or-less direct port of David Beazley's awesome PLY, with a new\npublic API, and RPython support.\n\nYou can find the documentation `online`_.\n\nBasic API:\n\n.. code:: python\n\
+    \n    from rply import ParserGenerator, LexerGenerator\n    from rply.token import BaseBox\n\n    lg = LexerGenerator()\n    # Add takes a rule name, and a regular expression that defines the rule.\n\
+    \    lg.add(\"PLUS\", r\"\\+\")\n    lg.add(\"MINUS\", r\"-\")\n    lg.add(\"NUMBER\", r\"\\d+\")\n\n    lg.ignore(r\"\\s+\")\n\n    # This is a list of the token names. precedence is an optional list\
+    \ of\n    # tuples which specifies order of operation for avoiding ambiguity.\n    # precedence must be one of \"left\", \"right\", \"nonassoc\".\n    # cache_id is an optional string which specifies\
+    \ an ID to use for\n    # caching. It should *always* be safe to use caching,\n    # RPly will automatically detect when your grammar is\n    # changed and refresh the cache for you.\n    pg = ParserGenerator([\"\
+    NUMBER\", \"PLUS\", \"MINUS\"],\n            precedence=[(\"left\", ['PLUS', 'MINUS'])], cache_id=\"myparser\")\n\n    @pg.production(\"main : expr\")\n    def main(p):\n        # p is a list, of each\
+    \ of the pieces on the right hand side of the\n        # grammar rule\n        return p[0]\n\n    @pg.production(\"expr : expr PLUS expr\")\n    @pg.production(\"expr : expr MINUS expr\")\n    def expr_op(p):\n\
+    \        lhs = p[0].getint()\n        rhs = p[2].getint()\n        if p[1].gettokentype() == \"PLUS\":\n            return BoxInt(lhs + rhs)\n        elif p[1].gettokentype() == \"MINUS\":\n       \
+    \     return BoxInt(lhs - rhs)\n        else:\n            raise AssertionError(\"This is impossible, abort the time machine!\")\n\n    @pg.production(\"expr : NUMBER\")\n    def expr_num(p):\n    \
+    \    return BoxInt(int(p[0].getstr()))\n\n    lexer = lg.build()\n    parser = pg.build()\n\n    class BoxInt(BaseBox):\n        def __init__(self, value):\n            self.value = value\n\n      \
+    \  def getint(self):\n            return self.value\n\nThen you can do:\n\n.. code:: python\n\n    parser.parse(lexer.lex(\"1 + 3 - 2+12-32\"))\n\nYou can also substitute your own lexer. A lexer is\
+    \ an object with a ``next()``\nmethod that returns either the next token in sequence, or ``None`` if the token\nstream has been exhausted.\n\nWhy do we have the boxes?\n-------------------------\n\n\
+    In RPython, like other statically typed languages, a variable must have a\nspecific type, we take advantage of polymorphism to keep values in a box so\nthat everything is statically typed. You can write\
+    \ whatever boxes you need for\nyour project.\n\nIf you don't intend to use your parser from RPython, and just want a cool pure\nPython parser you can ignore all the box stuff and just return whatever\
+    \ you\nlike from each production method.\n\nError handling\n--------------\n\nBy default, when a parsing error is encountered, an ``rply.ParsingError`` is\nraised, it has a method ``getsourcepos()``,\
+    \ which returns an\n``rply.token.SourcePosition`` object.\n\nYou may also provide an error handler, which, at the moment, must raise an\nexception. It receives the ``Token`` object that the parser errored\
+    \ on.\n\n.. code:: python\n\n    pg = ParserGenerator(...)\n\n    @pg.error\n    def error_handler(token):\n        raise ValueError(\"Ran into a %s where it wasn't expected\" % token.gettokentype())\n\
+    \nPython compatibility\n--------------------\n\nRPly is tested and known to work under Python 2.6, 2.7, 3.3+, and PyPy. It is\nalso valid RPython for PyPy checkouts from ``6c642ae7a0ea`` onwards.\n\n\
+    Links\n-----\n\n* `Source code and issue tracker <https://github.com/alex/rply/>`_\n* `PyPI releases <https://pypi.python.org/pypi/rply>`_\n* `Talk at PyCon US 2013: So you want to write an interpreter?\
+    \ <http://pyvideo.org/video/1694/so-you-want-to-write-an-interpreter>`_\n\n.. _`online`: https://rply.readthedocs.io/\n\n\n"
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''

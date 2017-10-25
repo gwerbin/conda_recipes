@@ -1,0 +1,43 @@
+{% set name = "args" %}
+{% set version = "0.1.0" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "a785b8d837625e9b61c39108532d95b85274acd679693b71ebb5156848fcf814" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+
+about:
+  home: https://github.com/kennethreitz/args
+  license: BSD License
+  license_family: BSD
+  license_file: ''
+  summary: Command Arguments for Humans.
+  description: 'args
+
+    ~~~~
+
+
+    This simple module gives you an elegant interface for your command line argumemnts.'
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''

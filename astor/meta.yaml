@@ -1,0 +1,50 @@
+{% set name = "astor" %}
+{% set version = "0.5" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "4abff251d3f03cbe99106cc16e0dc94adc4f88d580c34a717741c7090b76aab9" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+
+test:
+  imports:
+    - astor
+
+about:
+  home: https://github.com/berkerpeksag/astor
+  license: BSD License
+  license_family: BSD
+  license_file: ''
+  summary: Read/rewrite/write Python ASTs
+  description: "=============================\nastor -- AST observe/rewrite\n=============================\n\n:PyPI: https://pypi.python.org/pypi/astor\n:Documentation: http://astor.rtfd.org/\n:Source:\
+    \ https://github.com/berkerpeksag/astor\n:License: 3-clause BSD\n:Build status:\n    .. image:: https://secure.travis-ci.org/berkerpeksag/astor.png\n        :alt: Travis CI\n        :target: http://travis-ci.org/berkerpeksag/astor/\n\
+    \nastor is designed to allow easy manipulation of Python source via the AST.\n\nThere are some other similar libraries, but astor focuses on the following areas:\n\n- Round-trip back to Python via Armin\
+    \ Ronacher's codegen.py module:\n\n  - Modified AST doesn't need linenumbers, ctx, etc. or otherwise be directly compileable\n  - Easy to read generated code as, well, code\n\n- Dump pretty-printing\
+    \ of AST\n\n  - Harder to read than round-tripped code, but more accurate to figure out what\n    is going on.\n\n  - Easier to read than dump from built-in AST module\n\n- Non-recursive treewalk\n\n\
+    \  - Sometimes you want a recursive treewalk (and astor supports that, starting\n    at any node on the tree), but sometimes you don't need to do that.  astor\n    doesn't require you to explicitly\
+    \ visit sub-nodes unless you want to:\n\n  - You can add code that executes before a node's children are visited, and/or\n  - You can add code that executes after a node's children are visited, and/or\n\
+    \  - You can add code that executes and keeps the node's children from being\n    visited (and optionally visit them yourself via a recursive call)\n\n  - Write functions to access the tree based on\
+    \ object names and/or attribute names\n  - Enjoy easy access to parent node(s) for tree rewriting"
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''

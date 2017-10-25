@@ -1,0 +1,72 @@
+{% set name = "hy" %}
+{% set version = "0.13.0" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "c8cf7af7b7587c9599f0defcef1accbf1ad22254252cebf48432753d55f54ea7" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  entry_points:
+    - hy = hy.cmdline:hy_main
+    - hy3 = hy.cmdline:hy_main
+    - hyc = hy.cmdline:hyc_main
+    - hyc3 = hy.cmdline:hyc_main
+    - hy2py = hy.cmdline:hy2py_main
+    - hy2py3 = hy.cmdline:hy2py_main
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - rply >=0.7.0
+    - astor >=0.5
+    - clint >=0.4
+    - pyreadline >=2.1
+  run:
+    - python
+    - rply >=0.7.0
+    - astor >=0.5
+    - clint >=0.4
+    - pyreadline >=2.1
+
+test:
+  imports:
+    - hy
+    - hy.contrib
+    - hy.core
+    - hy.extra
+    - hy.lex
+  commands:
+    - hy --help
+    - hy3 --help
+    - hyc --help
+    - hyc3 --help
+    - hy2py --help
+    - hy2py3 --help
+
+about:
+  home: http://hylang.org/
+  license: MIT License
+  license_family: MIT
+  license_file: ''
+  summary: Lisp and Python love each other.
+  description: 'Hy is a Python <--> Lisp layer. It helps
+
+    make things work nicer, and lets Python and the Hy lisp variant play
+
+    nice together. '
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''
