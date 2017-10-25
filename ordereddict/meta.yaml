@@ -1,0 +1,38 @@
+{% set name = "ordereddict" %}
+{% set version = "1.1" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "1c35b4ac206cef2d24816c89f89cf289dd3d38cf7c449bb3fab7bf6d43f01b1f" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: 'python setup.py install '
+
+requirements:
+  build:
+    - python
+  run:
+    - python
+
+about:
+  home: The package home page
+  license: MIT License
+  license_family: MIT
+  license_file: ''
+  summary: Summary of the package
+  description: "Drop-in substitute for Py2.7's new collections.OrderedDict. The recipe has big-oh \r\nperformance that matches regular dictionaries (amortized O(1) \r\ninsertion/deletion/lookup and O(n)\
+    \ iteration/repr/copy/equality_testing).\r\n\r\nOriginally based on http://code.activestate.com/recipes/576693/"
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''
