@@ -3,4 +3,3 @@ Does not support Windows:
 - gunicorn (requires 'fcntrl' which is Unix-only)
 - airflow (depends on gunicorn)
 - distance (fails due to some file not found? idk why)
-- delorean (URL is wrong, should be "pythonhosted")
