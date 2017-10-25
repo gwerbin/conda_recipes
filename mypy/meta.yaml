@@ -1,0 +1,73 @@
+{% set name = "mypy" %}
+{% set version = "0.540" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "5d82f51e228a88e5de6ac1d6699dd09e250ce7de217a5ff1256e317266e738ec" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  entry_points:
+    - mypy=mypy.__main__:console_entry
+    - stubgen=mypy.stubgen:main
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - typed-ast >=1.1.0,<1.2.0
+  run:
+    - python
+    - typed-ast >=1.1.0,<1.2.0
+
+test:
+  imports:
+    - mypy
+    - mypy.myunit
+    - mypy.server
+    - mypy.test
+  commands:
+    - mypy --help
+    ## TODO: re-enable if/when my PR gets merged: https://github.com/python/mypy/pull/4160
+    #- stubgen --help
+
+about:
+  home: http://www.mypy-lang.org/
+  license: MIT License
+  license_family: MIT
+  license_file: ''
+  summary: Optional static typing for Python
+  description: 'Mypy -- Optional Static Typing for Python
+
+    =========================================
+
+
+    Add type annotations to your Python programs, and use mypy to type
+
+    check them.  Mypy is essentially a Python linter on steroids, and it
+
+    can catch many programming errors by analyzing your program, without
+
+    actually having to run it.  Mypy has a powerful type system with
+
+    features such as type inference, gradual typing, generics and union
+
+    types.
+
+
+
+    '
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''
