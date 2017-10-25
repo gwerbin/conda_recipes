@@ -1,0 +1,73 @@
+{% set name = "hy_kernel" %}
+{% set version = "0.3.0" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "f2c84220accc0284a3dd51660fabc4a4d49cea70e9a7652d503fe578c7b682da" %}
+
+package:
+  name: '{{ name|lower|replace("_", "-") }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - ipython >=3.0.0
+    - hy >=0.10.1
+    - ipykernel
+  run:
+    - python
+    - ipython >=3.0.0
+    - hy >=0.10.1
+
+test:
+  imports:
+    - hy_kernel
+    - hy_kernel.tests
+  requires:
+    - coverage
+    - nose
+
+about:
+  home: https://github.com/bollwyvl/hy_kernel
+  license: BSD License
+  license_family: BSD
+  license_file: ''
+  summary: A hy kernel for IPython
+  description: "# [hy_kernel][]\n\n[![build-badge][]][build] [![pypi-badge][]][pypi]\n\nA simple [Jupyter][] kernel for [Hy](http://hylang.org), a pythonic lisp.\n\n[![](screenshot.png) _The Hy tutorial\
+    \ as a Jupyter Notebook_][tutorial]\n\n\n## Features\n- basic REPL functionality\n- autocomplete with most special Hy constructs\n- syntax highlighting from [lighttable-hylang][]\n- [cell and line magics][magic]\n\
+      - [interactive widgets][widgets]\n- [pretty good tests][build]\n\n\n## Installation\n\n\n### pip\n```shell\npip install hy_kernel\n```\n\n\n### docker\nYou can try out Hy Kernel in Docker with [Docker\
+    \ Compose][docker-compose]:\n\n```bash\ngit clone https://github.com/bollwyvl/hy_kernel.git\ncd hy_kernel && docker-compose up\n```\n\n## Execution\nTo start the notebook in your directory of choice,\
+    \ with a running Hy kernel:\n\n```console\nipython console --kernel hy\n```\n\nOr the notebook web GUI:\n\n```shell\nipython notebook\n```\n\nOr:\n```shell\nipython qtconsole --kernel hy\n```\n\nOr:\n\
+    Your GUI might have a kernel selector: In the Web GUI it's in the\nupper-right-hand corner. Find it, and select `Hy` kernel from the kernel\nselector.\n\n![IPython Kernel Selector][kernel-selector]\n\
+    \n\n## Implementation\nThis kernel subclasses [IPythonKernel][] directly, as opposed to using\n[KernelBase][], which would probably the correct thing to do. This works, but\nmight be brittle. Each cell\
+    \ is run through [astor][], so you're actually\nseeing hy \u2192 ast \u2192 py \u2192 ast. While this probably incurs additional overhead,\nthe benefits (free magics, widgets, all the history works)\
+    \ are just too great to\ngive up.\n\n\n## Limitations\n\n### QtConsole\nA lot of things don't work quite right in the qt console, and this will not be\nsupported to the same extent as the HTML notebook\
+    \ and terminal console.\n\n### Operators\n\n_Issue #5_\n\nUse of operators e.g. `*`, `+`, `/` as the left-most atom in an expression appears to\nwork:\n```hylang\n;; works\n(+ 1 1)\n```\n\nUsing operators\
+    \ as just about anything else doesn't:\n```hylang\n;; breaks\n(reduce + [1 2 3])\n```\n\n#### Workaround\nUse the `operator` module:\n\n```hylang\n(import (operator (mul add)))\n(reduce mul [1 2 3])\n\
+    ```\n\nThis will probably need to be fixed upstream.\n\n\n### Magic\nCell and line magics are \"supported\", with the following caveats.\n\n#### \"Inline\" Line Magics\n\n_Issue #13_\n\nBecause we don't\
+    \ have much whitespace control over what gets compiled, and can't\ndo dirty tricks with comments (the hy compiler strips them), inline/indented\nline magics are probably not going to work.\n\n```hylang\n\
+    ;; breaks\n(if True (\n  !ls\n))\n```\n\n#### Raw Magics\nAdditionally, cell magics that should _not_ be parsed as Hy need to be _extra_-\nmagiced, with `%%%`. This is because there is no way to know\
+    \ whether a\nparticular magic expects python, or some other crazy thing e.g. html, ruby,\na file... not that `%%file` works anyway (see #12).\n\n```hylang\n%%html\n<h1>This Breaks!</h1>\n```\n\nbreaks,\
+    \ while\n\n```hylang\n%%%html\n<h1>This Works!</h1>\n```\n\nworks.\n\n\n## Collaboration\nIssues, pull requests, and forks are all supported and encouraged on the [Github\nrepository][hy_kernel].\n\n\
+    This [discussion on `hylang-discuss`][discuss] is also a good place to chime in.\n\nAdditionally, the [Jupyter list][] can provide a larger perspective on how this\nstuff fits into the larger picture\
+    \ of interactive computing.\n\n[astor]: https://github.com/berkerpeksag/astor\n[build-badge]: https://travis-ci.org/bollwyvl/hy_kernel.svg\n[build]: https://travis-ci.org/bollwyvl/hy_kernel\n[discuss]:\
+    \ https://groups.google.com/forum/#!topic/hylang-discuss/UkoET6pU5sM\n[docker-compose]: https://docs.docker.com/compose/\n[hy_kernel]: https://github.com/bollwyvl/hy_kernel\n[IPythonKernel]: https://github.com/ipython/ipython/blob/master/IPython/kernel/zmq/ipkernel.py\n\
+    [Jupyter]: http://jupyter.org\n[Jupyter list]: https://groups.google.com/forum/#!forum/jupyter\n[kernel-selector]: http://ipython.org/ipython-doc/dev/_images/kernel_selector_screenshot.png\n[KernelBase]:\
+    \ https://github.com/ipython/ipython/blob/master/IPython/kernel/zmq/kernelbase.py\n[lighttable-hylang]: https://github.com/cndreisbach/lighttable-hylang\n[magic]: notebooks/Magics.ipynb\n[pypi-badge]:\
+    \ https://img.shields.io/pypi/v/hy_kernel.svg\n[pypi]: https://pypi.python.org/pypi/hy_kernel/\n[tutorial]: http://nbviewer.ipython.org/github/bollwyvl/hy_kernel/blob/master/notebooks/Tutorial.ipynb\n\
+    [widgets]: notebooks/Widgets.ipynb"
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''
