@@ -1,0 +1,6 @@
+Does not support Windows:
+- uvloop (explicitly prohibited in setup.py)
+- gunicorn (requires 'fcntrl' which is Unix-only)
+- airflow (depends on gunicorn)
+- distance (fails due to some file not found? idk why)
+- delorean (URL is wrong, should be "pythonhosted")

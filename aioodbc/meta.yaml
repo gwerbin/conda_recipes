@@ -1,0 +1,73 @@
+{% set name = "aioodbc" %}
+{% set version = "0.2.0" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "1a859a4ac7de85bb7a743e22da3942fb046c18fed27fb68bb2ac01750ed259a7" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - pyodbc
+  run:
+    - python
+    - pyodbc
+
+test:
+  imports:
+    - aioodbc
+
+about:
+  home: https://github.com/aio-libs/aioodbc
+  license: Apache Software License
+  license_family: APACHE
+  license_file: ''
+  summary: ODBC driver for asyncio.
+  description: "aioodbc\n=======\n.. image:: https://travis-ci.org/aio-libs/aioodbc.svg?branch=master\n    :target: https://travis-ci.org/aio-libs/aioodbc\n.. image:: https://coveralls.io/repos/aio-libs/aioodbc/badge.svg?branch=master&service=github\n\
+    \    :target: https://coveralls.io/github/aio-libs/aioodbc?branch=master\n\n**aioodbc** is Python 3.5+ module that makes possible accessing ODBC_ databases\nwith asyncio_. It is rely on awesome pyodbc_\
+    \ library, preserve same look and\nfeel. *aioodbc* was written `async/await` syntax (PEP492_) thus not compatible\nwith Python older then 3.5.  Internally *aioodbc* employ threads to avoid\nblocking\
+    \ the event loop, btw threads_ are not that bad as you think, other\ndrivers like motor_ use same approach.\n\n**aioodbc** fully compatible and tested with uvloop_. Take a look on a test\nsuite, all\
+    \ tests are executed with both: default and uvloop_.\n\nSupported Databases\n-------------------\n\n**aioodbc** should work with all databases supported by pyodbc_. But for now\nlibrary have been tested\
+    \ with: **SQLite**, **MySQL** and **PostgreSQL**. Feel\nfree to add other databases to the test suite by submitting PR.\n\n\nCommunity\n---------\nMailing List: https://groups.google.com/forum/#!forum/aio-libs\n\
+    \nChat room: https://gitter.im/aio-libs/Lobby\n\n\nBasic Example\n-------------\n\n**aioodbc** based on pyodbc_ , and provides same api, you just need\nto use  ``yield from conn.f()`` or ``await conn.f()``\
+    \ instead of just\ncall ``conn.f()`` for every method.\n\nProperties are unchanged, so ``conn.prop`` is correct as well as\n``conn.prop = val``.\n\n\n.. code:: python\n\n    import asyncio\n    import\
+    \ aioodbc\n\n\n    loop = asyncio.get_event_loop()\n\n\n    async def test_example():\n        dsn = 'Driver=SQLite;Database=sqlite.db'\n        conn = await aioodbc.connect(dsn=dsn, loop=loop)\n\n\
+    \        cur = await conn.cursor()\n        await cur.execute(\"SELECT 42;\")\n        r = await cur.fetchall()\n        print(r)\n        await cur.close()\n        await conn.close()\n\n    loop.run_until_complete(test_example())\n\
+    \n\nConnection Pool\n---------------\nConnection pooling ported from aiopg_ and rely on PEP492_ features:\n\n.. code:: python\n\n    import asyncio\n    import aioodbc\n\n\n    loop = asyncio.get_event_loop()\n\
+    \n\n    async def test_pool():\n        dsn = 'Driver=SQLite;Database=sqlite.db'\n        pool = await aioodbc.create_pool(dsn=dsn, loop=loop)\n\n        async with pool.acquire() as conn:\n       \
+    \     cur = await conn.cursor()\n            await cur.execute(\"SELECT 42;\")\n            r = await cur.fetchall()\n            print(r)\n            await cur.close()\n            await conn.close()\n\
+    \        pool.close()\n        await pool.wait_closed()\n\n    loop.run_until_complete(test_example())\n\n\nContext Managers\n----------------\n`Pool`, `Connection` and `Cursor` objects support context\
+    \ manager\nprotocol:\n\n.. code:: python\n\n    import asyncio\n    import aioodbc\n\n\n    loop = asyncio.get_event_loop()\n\n\n    async def test_example():\n        dsn = 'Driver=SQLite;Database=sqlite.db'\n\
+    \n        async with aioodbc.create_pool(dsn=dsn, loop=loop) as pool:\n            async with pool.acquire() as conn:\n                async with conn.cursor() as cur:\n                    await cur.execute('SELECT\
+    \ 42;')\n                    val = await cur.fetchone()\n                    print(val)\n\n    loop.run_until_complete(test_example())\n\n\nInstallation\n------------\n\nIn Linux environment pyodbc_\
+    \ (hence *aioodbc*) requires unixODBC_ library.\nYou can install it using package manager from your OS distribution, for example::\n\n      $ sudo apt-get install unixodbc\n      $ sudo apt-get install\
+    \ unixodbc-dev\n\nthen::\n\n   pip install aioodbc\n\n\nRun tests\n---------\n\nFor testing purposes you need to install docker_ and development\nrequirements::\n\n    $ pip install -r requirements-dev.txt\n\
+    \nIn order to simplify development all tests and environment created inside\nseparate docker image, you do not need to install any database of system level\nlibraries, everything happens automatically\
+    \ inside container.\n\nThen just execute::\n\n    $ make docker_build\n    $ make docker_test\n\nTest will automatically pull images and build containers with\nrequired databases.\n\n*NOTE:* Running\
+    \ tests requires Python 3.6 or higher.\n\n\nOther SQL Drivers\n-----------------\n\n* aiopg_ - asyncio client for PostgreSQL\n* aiomysql_ - asyncio client form MySQL\n\n\nRequirements\n------------\n\
+    \n* Python_ 3.5+\n* pyodbc_\n* uvloop_ (optional)\n\n\n.. _Python: https://www.python.org\n.. _asyncio: http://docs.python.org/3.4/library/asyncio.html\n.. _pyodbc: https://github.com/mkleehammer/pyodbc\n\
+    .. _uvloop: https://github.com/MagicStack/uvloop\n.. _ODBC: https://en.wikipedia.org/wiki/Open_Database_Connectivity\n.. _aiopg: https://github.com/aio-libs/aiopg\n.. _aiomysql: https://github.com/aio-libs/aiomysql\n\
+    .. _PEP492: https://www.python.org/dev/peps/pep-0492/\n.. _unixODBC: http://www.unixodbc.org/\n.. _threads: http://techspot.zzzeek.org/2015/02/15/asynchronous-python-and-databases/\n.. _docker: https://docs.docker.com/engine/installation/\n\
+    .. _motor: https://emptysqua.re/blog/motor-0-7-beta/\n\nChanges\n-------\n\n0.2.0 (2017-06-24)\n^^^^^^^^^^^^^^^^^^\n* Fixed Cursor.execute returns a pyodbc.Cursor instead of itself #114\n* Fixed __aiter__\
+    \ to not be awaitable for python>=3.5.2 #113\n* Tests now using aiodocker #106\n\n0.1.0 (2017-04-30)\n^^^^^^^^^^^^^^^^^^\n* Fixed project version\n\n\n0.0.4 (2017-04-30)\n^^^^^^^^^^^^^^^^^^\n* Improved\
+    \ mysql testing\n\n\n0.0.3 (2016-07-05)\n^^^^^^^^^^^^^^^^^^\n* Dockerize tests, now we can add more DBs to tests using docker #15, #17, #19\n* Test suite executed with both default asyncio and uvloop\
+    \ #18\n\n\n0.0.2 (2016-01-01)\n^^^^^^^^^^^^^^^^^^\n* Improved pep 492 support.\n* pool.get method removed, use acquire instead.\n* Added tests against MySQL.\n* Added bunch of doc strings.\n\n\n0.0.1\
+    \ (2015-10-12)\n^^^^^^^^^^^^^^^^^^\n* Initial release."
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''

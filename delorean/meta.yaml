@@ -1,0 +1,59 @@
+{% set name = "delorean" %}
+{% set version = "0.6.0" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "09000745a290f7b1a5a7a2a038c2a3274f8ff46057f1df8a94053ed33cf47b76" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://files.pythonhosted.org/packages/20/00/bcaeaa75eb40fcd7298b5ffd3d0d1184a0b232e5fe8742c4dd53d3d89f34/{{ name | title }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - babel >=2.1.1
+    - humanize >=0.5.1
+    - python-dateutil >=2.4.2
+    - pytz >=2015.7
+    - tzlocal >=1.2
+  run:
+    - python
+    - babel >=2.1.1
+    - humanize >=0.5.1
+    - python-dateutil >=2.4.2
+    - pytz >=2015.7
+    - tzlocal >=1.2
+
+test:
+  imports:
+    - delorean
+
+about:
+  home: https://github.com/myusuf3/delorean
+  license: MIT License
+  license_family: MIT
+  license_file: ''
+  summary: library for manipulating datetimes with ease and clarity
+  description: ".. image:: http://delorean.readthedocs.org/en/latest/_static/delorean.png\n\nDelorean: Time Travel Made Easy\n===============================\n\n`Delorean` is a library for clearing up the\
+    \ inconvenient truths that arise dealing with datetimes in Python. Understanding that timing is a delicate enough of a problem `delorean` hopes to provide a cleaner less troublesome solution to shifting,\
+    \ manipulating, and generating `datetimes`.\n\nDelorean stands on the shoulders of giants `pytz <http://pytz.sourceforge.net/>`_ and `dateutil <http://labix.org/python-dateutil>`_\n\n`Delorean` will\
+    \ provide natural language improvements for manipulating time, as well as datetime abstractions for ease of use. The overall goal is to improve datetime manipulations, with a little bit of software\
+    \ and philosophy.\n\nPretty much make you a badass time traveller.\n\nGetting Started\n^^^^^^^^^^^^^^^\n\nHere is the world without a flux capacitor at your side:\n\n.. code-block:: python\n\n    from\
+    \ datetime import datetime\n    import pytz\n\n    est = pytz.timezone('US/Eastern')\n    d = datetime.now(pytz.utc)\n    d = est.normalize(d.astimezone(est))\n    return d\n\nNow lets warm up the `delorean`:\n\
+    \n.. code-block:: python\n\n    from delorean import Delorean\n\n    d = Delorean()\n    d = d.shift('US/Eastern')\n    return d\n\nLook at you looking all fly. This was just a test drive: check out\
+    \ out what else\n`delorean` can help with in the `documentation <http://delorean.readthedocs.org/en/latest/>`_."
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''

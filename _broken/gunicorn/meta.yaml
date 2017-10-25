@@ -1,0 +1,63 @@
+{% set name = "gunicorn" %}
+{% set version = "19.7.1" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "eee1169f0ca667be05db3351a0960765620dad53f53434262ff8901b68a1b622" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  entry_points:
+    - gunicorn=gunicorn.app.wsgiapp:run
+    - gunicorn_paster=gunicorn.app.pasterapp:run
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+    - setuptools
+
+test:
+  imports:
+    - gunicorn
+    - gunicorn.app
+    - gunicorn.http
+    - gunicorn.instrument
+    - gunicorn.workers
+  commands:
+    - gunicorn --help
+    - gunicorn_paster --help
+  requires:
+    - pytest ==3.0.5
+    - pytest-cov ==2.4.0
+    - fcntl
+
+about:
+  home: http://gunicorn.org
+  license: MIT License
+  license_family: MIT
+  license_file: ''
+  summary: WSGI HTTP Server for UNIX
+  description: "Gunicorn\n--------\n\n.. image::\n    https://secure.travis-ci.org/benoitc/gunicorn.png?branch=master\n    :alt: Build Status\n    :target: https://travis-ci.org/benoitc/gunicorn\n\nGunicorn\
+    \ 'Green Unicorn' is a Python WSGI HTTP Server for UNIX. It's a pre-fork\nworker model ported from Ruby's Unicorn_ project. The Gunicorn server is broadly\ncompatible with various web frameworks, simply\
+    \ implemented, light on server\nresource usage, and fairly speedy.\n\nFeel free to join us in `#gunicorn`_ on Freenode_.\n\nDocumentation\n-------------\n\nThe documentation is hosted at http://docs.gunicorn.org.\n\
+    \nInstallation\n------------\n\nGunicorn requires **Python 2.x >= 2.6** or **Python 3.x >= 3.2**.\n\nInstall from PyPI::\n\n    $ pip install gunicorn\n\n\nUsage\n-----\n\nBasic usage::\n\n    $ gunicorn\
+    \ [OPTIONS] APP_MODULE\n\nWhere ``APP_MODULE`` is of the pattern ``$(MODULE_NAME):$(VARIABLE_NAME)``. The\nmodule name can be a full dotted path. The variable name refers to a WSGI\ncallable that should\
+    \ be found in the specified module.\n\nExample with test app::\n\n    $ cd examples\n    $ gunicorn --workers=2 test:app\n\n\nLicense\n-------\n\nGunicorn is released under the MIT License. See the\
+    \ LICENSE_ file for more\ndetails.\n\n.. _Unicorn: http://unicorn.bogomips.org/\n.. _`#gunicorn`: http://webchat.freenode.net/?channels=gunicorn\n.. _Freenode: http://freenode.net\n.. _LICENSE: http://github.com/benoitc/gunicorn/blob/master/LICENSE\n"
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''
