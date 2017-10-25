@@ -1,5 +1,18 @@
 Does not support Windows:
-- uvloop (explicitly prohibited in setup.py)
-- gunicorn (requires 'fcntrl' which is Unix-only)
-- airflow (depends on gunicorn)
-- distance (fails due to some file not found? idk why)
+- uvloop
+  - Windows explicitly prohibited in setup.py
+- gunicorn
+  - requires 'fcntrl' which is Unix-only
+- airflow
+  - depends on gunicorn
+- jq.py, pyjq
+  - aka "jq" on PyPI but the name is already taken by jq itself
+  - jq itself is unavailable on Windows
+- functional (C version)
+  - use pure-Python version instead
+
+Fails for other reasons:
+- distance
+  - fails due to some file not found? idk why
+
+vim: shiftwidth=2 expandtab

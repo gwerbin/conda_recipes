@@ -1,0 +1,66 @@
+{% set name = "pyjq" %}
+{% set version = "2.1.0" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "f6f89c851ad90bc29c8570982343ca9ccf626ba9424c276d7fe37bbdc1d60fe2" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - six
+    - jq
+  run:
+    - python
+    - six
+    - jq
+
+about:
+  home: http://github.com/doloopwhile/pyjq
+  license: MIT License
+  license_family: MIT
+  license_file: ''
+  summary: Binding for jq JSON processor.
+  description: "pyjq: Binding for jq JSON Processor\n===================================\n\npyjq is a Python bindings for jq (http://stedolan.github.io/jq/).\n\n    jq is like sed for JSON data \u2013 you\
+    \ can use it to slice and filter\n    and map and transform structured data with the same ease that sed,\n    awk, grep and friends let you play with text.\n\n    http://stedolan.github.io/jq/\n\nYou\
+    \ can seamlessly call jq script (like regular expression) and process\nplain python data structure.\n\nFor your information, https://pypi.python.org/pypi/jq is a also jq\nbindings but different and\
+    \ incompatible with pyjq.\n\nExample\n-------\n\n::\n\n    >>> data = dict(\n    ...     parameters= [\n    ...         dict(name=\"PKG_TAG_NAME\", value=\"trunk\"),\n    ...         dict(name=\"GIT_COMMIT\"\
+    , value=\"master\"),\n    ...         dict(name=\"TRIGGERED_JOB\", value=\"trunk-buildall\")\n    ...     ],\n    ...     id=\"2013-12-27_00-09-37\",\n    ...     changeSet=dict(items=[], kind=\"git\"\
+    ),\n    ... )\n    >>> import pyjq\n    >>> pyjq.first('.parameters[] | {\"param_name\": .name, \"param_type\":.type}', data)\n    {'param_type': None, 'param_name': 'PKG_TAG_NAME'}\n\nInstall\n-------\n\
+    \nYou can install from PyPI by usual way.\n\n::\n\n    pip install pyjq\n\nAPI\n---\n\nFor jq script, `see its\nmanual <http://stedolan.github.io/jq/manual/>`__.\n\nOnly four APIs are provided:\n\n\
+      -  ``all``\n-  ``first``\n-  ``one``\n-  ``compile``\n\n``all`` transforms a value by JSON script and returns all results as a\nlist.\n\n::\n\n    >>> value = {\"user\":\"stedolan\",\"titles\":[\"JQ\
+    \ Primer\", \"More JQ\"]}\n    >>> pyjq.all('{user, title: .titles[]}', value)\n    [{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]\n\n``all`` takes an optional\
+    \ argument ``vars``. ``vars`` is a dictonary of\npredefined variables for ``script``. The values in ``vars`` are avaiable\nin the ``script`` as a ``$key``. That is, ``vars`` works like ``--arg``\noption\
+    \ and ``--argjson`` option of jq command.\n\n::\n\n    >>> pyjq.all('{user, title: .titles[]} | select(.title == $title)', value, vars={\"title\": \"More JQ\"})\n    [{'user': 'stedolan', 'title': 'More\
+    \ JQ'}]\n\n``all`` takes an optional argument ``url``. If ``url`` is given, the\nsubject of transformation is got from the ``url``.\n\n::\n\n    >> pyjq.all(\".[] | .login\", url=\"https://api.github.com/repos/stedolan/jq/contributors\"\
+    ) # get all contributors of jq\n    ['nicowilliams', 'stedolan', 'dtolnay', ...\n\nAdditionally, ``all`` takes an optional argument ``opener``. The default\n``opener`` will simply download contents\
+    \ by ``urllib.request.urlopen``\nand decode by ``json.decode``. However, you can customize this behavior\nusing custom ``opener``.\n\n``first`` is almost some to ``all`` but it ``first`` returns the\
+    \ first\nresult of transformation.\n\n::\n\n    >>> value = {\"user\":\"stedolan\",\"titles\":[\"JQ Primer\", \"More JQ\"]}\n    >>> pyjq.all('{user, title: .titles[]}', value)\n    [{'user': 'stedolan',\
+    \ 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]\n\n``first`` returns ``default`` when there are no results.\n\n::\n\n    >>> value = {\"user\":\"stedolan\",\"titles\":[\"JQ Primer\"\
+    , \"More JQ\"]}\n    >>> pyjq.first('.titles[] | select(test(\"e\"))', value) # The first title which is contains \"e\"\n    'JQ Primer'\n\n``first`` returns the first result of transformation. It returns\n\
+    ``default`` when there are no results.\n\n::\n\n    >>> value = {\"user\":\"stedolan\",\"titles\":[\"JQ Primer\", \"More JQ\"]}\n    >>> pyjq.first('.titles[] | select(test(\"T\"))', value, \"Third\
+    \ JS\") # The first title which is contains \"T\"\n    'Third JS'\n\n``one`` do also returns the first result of transformation but raise\nException if there are no results.\n\n::\n\n    >>> value =\
+    \ {\"user\":\"stedolan\",\"titles\":[\"JQ Primer\", \"More JQ\"]}\n    >>> pyjq.one('.titles[] | select(test(\"T\"))', value)\n    IndexError: Result of jq is empty\n\nLimitation\n----------\n\njq is\
+    \ a JSON Processor. Therefore pyjq is able to process only \"JSON\ncompatible\" data (object made only from str, int, float, list, dict).\n\nQ&A\n---\n\nHow can I process json string got from API by\
+    \ pyjq?\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\nYou should apply ``json.loads`` in the standard library before pass to\npyjq.\n\nAuthor\n------\n\n`OMOTO Kenji <https://github.com/doloopwhile>`__\n\
+    \nLicense\n-------\n\nReleased under the MIT license. See LICENSE for details.\n\nChanges\n-------\n\n2.1.0\n~~~~~\n\n-  API's translate JS object not to ``dict`` but to\n   ``collections.OrderedDict``.\n\
+    \n2.0.0\n~~~~~\n\n-  Semantic versioning.\n-  Bundle source codes of jq and oniguruma.\n-  Supported Python 3.5.\n-  Dropped support for Python 3.2.\n-  Aeded ``all`` method.\n\n1.0\n~~~\n\n-  First\
+    \ release.\n"
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''
