@@ -66,8 +66,8 @@ about:
 
 
     '
-  doc_url: ''
-  dev_url: ''
+  doc_url: 'http://mypy.readthedocs.io'
+  dev_url: 'https://github.com/python/mypy'
 
 extra:
-  recipe-maintainers: ''
+  recipe-maintainers: 'gwerbin'

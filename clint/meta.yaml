@@ -74,7 +74,7 @@ about:
     * (Auto/Manual) Disabling of Colors\n* Smarter Colors\n* max_width, min_width\n* Strip cli colors\n* bug fixes\n\n\n0.1.2 (2011-03-21)\n++++++++++++++++++\n\n* Bugfixes\n\n\n0.1.1 (2011-03-20)\n++++++++++++++++++\n\
     \n* Bugfixes\n* Indent Newline Injection\n* resources: flags, not_flags, files, not_files\n* Lots of Examples\n\n\n0.1.0 (2011-03-20)\n++++++++++++++++++\n\n* Initial Release!"
   doc_url: ''
-  dev_url: ''
+  dev_url: 'https://github.com/kennethreitz/clint'
 
 extra:
-  recipe-maintainers: ''
+  recipe-maintainers: 'gwerbin'

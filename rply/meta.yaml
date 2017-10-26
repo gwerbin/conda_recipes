@@ -32,7 +32,7 @@ test:
 
 about:
   home: The package home page
-  license: BSD 3-clause
+  license: BSD 3-clause License
   license_family: BSD
   license_file: ''
   summary: A pure Python Lex/Yacc that works with RPython
@@ -61,4 +61,4 @@ about:
   dev_url: ''
 
 extra:
-  recipe-maintainers: ''
+  recipe-maintainers: 'gwerbin'

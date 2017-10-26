@@ -52,8 +52,8 @@ about:
     \ datetime import datetime\n    import pytz\n\n    est = pytz.timezone('US/Eastern')\n    d = datetime.now(pytz.utc)\n    d = est.normalize(d.astimezone(est))\n    return d\n\nNow lets warm up the `delorean`:\n\
     \n.. code-block:: python\n\n    from delorean import Delorean\n\n    d = Delorean()\n    d = d.shift('US/Eastern')\n    return d\n\nLook at you looking all fly. This was just a test drive: check out\
     \ out what else\n`delorean` can help with in the `documentation <http://delorean.readthedocs.org/en/latest/>`_."
-  doc_url: ''
-  dev_url: ''
+  doc_url: 'http://delorean.readthedocs.org'
+  dev_url: 'https://github.com/myusuf3/delorean'
 
 extra:
-  recipe-maintainers: ''
+  recipe-maintainers: 'gwerbin'

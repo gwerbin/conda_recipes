@@ -43,8 +43,8 @@ about:
     \ visit sub-nodes unless you want to:\n\n  - You can add code that executes before a node's children are visited, and/or\n  - You can add code that executes after a node's children are visited, and/or\n\
     \  - You can add code that executes and keeps the node's children from being\n    visited (and optionally visit them yourself via a recursive call)\n\n  - Write functions to access the tree based on\
     \ object names and/or attribute names\n  - Enjoy easy access to parent node(s) for tree rewriting"
-  doc_url: ''
+  doc_url: 'http://astor.rtfd.org'
   dev_url: ''
 
 extra:
-  recipe-maintainers: ''
+  recipe-maintainers: 'gwerbin'

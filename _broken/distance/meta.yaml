@@ -31,7 +31,7 @@ about:
   home: https://github.com/doukremt/distance
   license: GNU General Public License (GPL)
   license_family: LGPL
-  license_file: ''
+  license_file: '../LICENSE'
   summary: Utilities for comparing sequences
   description: "distance - Utilities for comparing sequences\n============================================\n\nThis package provides helpers for computing similarities between arbitrary sequences. Included\
     \ metrics are Levenshtein, Hamming, Jaccard, and Sorensen distance, plus some bonuses. All distance computations are implemented in pure Python, and most of them are also implemented in C.\n\n\nInstallation\n\
