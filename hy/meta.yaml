@@ -23,10 +23,11 @@ build:
     - hy2py = hy.cmdline:hy2py_main
     - hy2py3 = hy.cmdline:hy2py_main
   script: python setup.py install --single-version-externally-managed --record=record.txt
+  noarch: python
 
 requirements:
   build:
-    - noarch: python
+    - python
     - setuptools
     - rply >=0.7.0
     - astor >=0.5
