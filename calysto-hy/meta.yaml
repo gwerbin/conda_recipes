@@ -20,7 +20,7 @@ build:
 
 requirements:
   build:
-    - python
+    - noarch: python
     - setuptools
     - hy
     - metakernel

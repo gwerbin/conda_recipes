@@ -26,7 +26,7 @@ build:
 
 requirements:
   build:
-    - python
+    - noarch: python
     - setuptools
     - rply >=0.7.0
     - astor >=0.5

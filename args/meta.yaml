@@ -19,7 +19,7 @@ build:
 
 requirements:
   build:
-    - python
+    - noarch: python
     - setuptools
   run:
     - python

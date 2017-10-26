@@ -19,7 +19,7 @@ build:
 
 requirements:
   build:
-    - python
+    - noarch: python
     - setuptools
     - ipython >=3.0.0
     - hy >=0.10.1

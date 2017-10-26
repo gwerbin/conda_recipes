@@ -8,8 +8,6 @@ Does not support Windows:
 - jq.py, pyjq
   - aka "jq" on PyPI but the name is already taken by jq itself
   - jq itself is unavailable on Windows
-- functional (C version)
-  - use pure-Python version instead
 
 Fails for other reasons:
 - distance
