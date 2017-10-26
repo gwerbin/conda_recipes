@@ -1,3 +1,5 @@
+Can I noarch *everything*?
+
 Does not support Windows:
 - uvloop
   - Windows explicitly prohibited in setup.py
